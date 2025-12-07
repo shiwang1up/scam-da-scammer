@@ -159,10 +159,38 @@ function App() {
     }
   };
 
+  const [timeLeft, setTimeLeft] = useState(5);
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timerId);
+    }
+  }, [timeLeft]);
+
+  const handleRetry = () => {
+    window.location.reload();
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-300 text-white h-screen">
-      <AmazonSpinner size="lg" className="mr-3" />
-      {/* <AmazonSkeleton className="w-full h-48 rounded-lg" /> */}
+    <div className="flex flex-col items-center justify-center bg-gray-100 text-gray-800 h-screen p-4">
+      {timeLeft > 0 ? (
+        <div className="flex flex-col items-center space-y-4">
+          <AmazonSpinner size="lg" />
+          <h2 className="text-xl font-semibold">Please wait and redirecting...</h2>
+          <p className="text-sm text-gray-600">Redirecting in {timeLeft} seconds</p>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center space-y-4">
+          <p className="text-lg mb-2">Connection timed out</p>
+          <button
+            onClick={handleRetry}
+            className="px-6 py-2 bg-[#f0c14b] border border-[#a88734] rounded-sm shadow-sm hover:bg-[#ddb347] active:bg-[#cba945] text-sm focus:outline-none focus:ring-2 focus:ring-[#f0c14b] focus:ring-opacity-50"
+          >
+            Retry
+          </button>
+        </div>
+      )}
     </div>
   );
 }
