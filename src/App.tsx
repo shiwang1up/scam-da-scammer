@@ -174,14 +174,14 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 text-gray-800 h-screen p-4">
-      {timeLeft > 0 ? (
-        <div className="flex flex-col items-center space-y-4">
-          <AmazonSpinner size="lg" />
-          <h2 className="text-xl font-semibold">Please wait and redirecting...</h2>
-          <p className="text-sm text-gray-600">Redirecting in {timeLeft} seconds</p>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center space-y-4">
+      {/* {timeLeft > 0 ? ( */}
+      <div className="flex flex-col items-center space-y-4">
+        <AmazonSpinner size="lg" />
+        <h2 className="text-xl font-semibold">Please wait and redirecting...</h2>
+        {/* <p className="text-sm text-gray-600">Redirecting in {timeLeft} seconds</p> */}
+      </div>
+      {/* ) : ( */}
+      {/* <div className="flex flex-col items-center space-y-4">
           <p className="text-lg mb-2">Connection timed out</p>
           <button
             onClick={handleRetry}
@@ -190,7 +190,7 @@ function App() {
             Retry
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
