@@ -177,7 +177,7 @@ function App() {
       {/* {timeLeft > 0 ? ( */}
       <div className="flex flex-col items-center space-y-4">
         <AmazonSpinner size="lg" />
-        <h2 className="text-xl font-semibold">Please wait and redirecting...</h2>
+        <h2 className="text-xl font-semibold">Please wait retrieving Appstore Code...</h2>
         {/* <p className="text-sm text-gray-600">Redirecting in {timeLeft} seconds</p> */}
       </div>
       {/* ) : ( */}
